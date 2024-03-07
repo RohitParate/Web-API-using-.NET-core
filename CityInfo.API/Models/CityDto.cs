@@ -8,7 +8,7 @@
 
         public int NumberOfPointsofInterest
         {
-            get
+            get      
             {
                 return PointsOfInterests.Count;
             }

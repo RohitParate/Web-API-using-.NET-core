@@ -1,4 +1,5 @@
 using CityInfo.API;
+using CityInfo.API.DbContexts;
 using CityInfo.API.Models;
 using CityInfo.API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,9 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddProblemDetails(); //give details of problem on development and production environment. 
-builder.Services.AddDbContext<TodoContext>(opt =>
+/*builder.Services.AddDbContext<TodoContext>(opt =>
     opt.UseInMemoryDatabase("TodoList"));
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+*/// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -30,6 +31,13 @@ builder.Services.AddTransient<IMailService,CloudMailService >();
 #endif
 
 builder.Services.AddSingleton<CitiesDataStore>();
+
+  builder.Services.AddDbContext<CityInfoContext>(dbContextOptions => dbContextOptions.UseSqlite(
+    builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"] ));
+
+builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
